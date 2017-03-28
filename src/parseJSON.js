@@ -16,9 +16,41 @@ var parseJSON = function(json) {
   if (json[0] === '[') {
     var result = [];
     json = json.slice(1, json.length - 1);
-    for (var i = 0; i < json.length; i++) {
-      
+    console.log(json);
+    while (json.length > 0) {
+      console.log(json, result);
+      if (json[0] === '[') {
+        var closedCounter = 1;
+        var i;
+        for (i = 1; i < json.length; i++) {
+          if (json[i] === '[') {
+            closedCounter++;
+          } else if (json[i] === ']') {
+            closedCounter--;
+          }
+          if (!closedCounter) {
+            break;
+          }
+        }
+        result.push(parseJSON(json.slice(1, i)));
+        json = json.slice(i + 1);
+      } else if (json[0] === '{') {
+
+      } else if (json[0] === '"') {
+        var endIndex = json.slice(1).indexOf('"');
+        result.push(parseJSON(json.slice(1, endIndex)));
+        json = json.slice(endIndex + 2); // should be plus 1, but accounts for slicing at 1 on line 24
+      } else if (json[0] === "'") {
+        var endIndex = json.slice(1).indexOf("'");
+        result.push(parseJSON(json.slice(1, endIndex)));
+        json = json.slice(endIndex + 2); // should be plus 1, but accounts for slicing at 1 on line 24
+      } else {
+        var endIndex = json.indexOf(',');
+        result.push(parseJSON(json.slice(0, endIndex)));
+        json = json.slice(endIndex + 1);
+      }
     }
+    return result;
   }
 
 
