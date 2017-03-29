@@ -12,7 +12,14 @@ var parseJSON = function(json) {
   // if isInteger
     // return the number version
   // else it is an edge
-
+  function handleQuotes(quote) {
+    var endIndex = json.slice(1).indexOf(quote);
+    result.push(parseJSON(json.slice(1, endIndex + 1)));
+    json = json.slice(endIndex + 2); // should be plus 1, but accounts for slicing at 1 on line 24
+  }
+  function convertStringToType(string) {
+    return (new Function('return ' string + ';'))();
+  }
   if (json[0] === '[') {
     var result = [];
     json = json.slice(1, json.length - 1);
@@ -45,15 +52,22 @@ var parseJSON = function(json) {
         result.push(parseJSON(json.slice(1, endIndex)));
         json = json.slice(endIndex + 2); // should be plus 1, but accounts for slicing at 1 on line 24
       } else {
+        json = '';
         var endIndex = json.indexOf(',');
         result.push(parseJSON(json.slice(0, endIndex)));
         json = json.slice(endIndex + 1);
       }
     }
     return result;
+  } else if (json[0] === '{') {
+
+  } else if (json[0] === "'") {
+
+  } else if (json[0] === "'") {
+
+  } else if (Number.isInteger(Number(json[0]))){
+  } else {
   }
-
-
 
   /*if (json[0] === '{') {
 
